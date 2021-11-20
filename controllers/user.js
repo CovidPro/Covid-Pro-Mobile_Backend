@@ -12,19 +12,17 @@ exports.createUser = async (req, res) => {
       success: false,
       message: 'This email is already in use, try sign-in',
     });
-  /*
   isNewUser = await User.isThisIDInUse(idnumber);
   if (!isNewUser)
     return res.json({
       success: false,
       message: 'This ID number is already in use, try sign-in',
     });
-    */
   const user = await User({
     fullname,
     email,
     password,
-    //idnumber
+    idnumber
   });
   await user.save();
   
@@ -130,8 +128,6 @@ exports.signOut = async (req, res) => {
   }
 };
 
-   */
-/*
 exports.updateTime = async (req, res) => {
   const { user } = req;
   if (!user)
@@ -147,4 +143,3 @@ exports.updateTime = async (req, res) => {
   );
   res.json({ success: true, message: 'Your time has updated!' });
 };
-   */
