@@ -6,6 +6,7 @@ const {
   userSignIn,
   uploadProfile,
   signOut,
+  updateTime
 } = require('../controllers/user');
 const { isAuth } = require('../middlewares/auth');
 const {
@@ -36,5 +37,7 @@ router.post(
   uploads.single('profile'),
   uploadProfile
 );
+router.post('/update-time', isAuth, updateTime);
+
 
 module.exports = router;

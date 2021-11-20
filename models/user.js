@@ -16,6 +16,11 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  idnumber: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   
   avatar: String,
   tokens: [{ type: Object }],
@@ -52,6 +57,19 @@ userSchema.statics.isThisEmailInUse = async function (email) {
     return true;
   } catch (error) {
     console.log('error inside isThisEmailInUse method', error.message);
+    return false;
+  }
+};
+
+userSchema.statics.isThisIDInUse = async function (idnumber) {
+  if (!idnumber) throw new Error('Invalid ID Number');
+  try {
+    const user = await this.findOne({ idnumber });
+    if (user) return false;
+
+    return true;
+  } catch (error) {
+    console.log('error inside isThisIDInUse method', error.message);
     return false;
   }
 };
