@@ -5,17 +5,24 @@ const cloudinary = require('../helper/imageUpload');
 
 exports.createUser = async (req, res) => {
   //console.log(req.body);
-  const { fullname, email, password } = req.body;
+  const { fullname, email, password, idnumber } = req.body;
   const isNewUser = await User.isThisEmailInUse(email);
   if (!isNewUser)
     return res.json({
       success: false,
       message: 'This email is already in use, try sign-in',
     });
+  isNewUser = await User.isThisIDInUse(idnumber);
+  if (!isNewUser)
+    return res.json({
+      success: false,
+      message: 'This ID number is already in use, try sign-in',
+    });
   const user = await User({
     fullname,
     email,
     password,
+    idnumber
   });
   await user.save();
   
@@ -119,4 +126,20 @@ exports.signOut = async (req, res) => {
     await User.findByIdAndUpdate(req.user._id, { tokens: newTokens });
     res.json({ success: true, message: 'Sign out successfully!' });
   }
+};
+
+exports.updateTime = async (req, res) => {
+  const { user } = req;
+  if (!user)
+    return res
+        .status(401)
+        .json({ success: false, message: 'unauthorized access!' });
+
+  const { time } = req.body;
+  const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { time : "7878"},
+      { new: true }
+  );
+  res.json({ success: true, message: 'Your time has updated!' });
 };
