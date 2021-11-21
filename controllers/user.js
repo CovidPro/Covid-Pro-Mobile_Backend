@@ -5,24 +5,19 @@ const cloudinary = require('../helper/imageUpload');
 
 exports.createUser = async (req, res) => {
   //console.log(req.body);
-  const { fullname, email, password, idnumber } = req.body;
+  // TODO : add id number
+  const { fullname, email, password } = req.body;
   const isNewUser = await User.isThisEmailInUse(email);
   if (!isNewUser)
     return res.json({
       success: false,
       message: 'This email is already in use, try sign-in',
     });
-  isNewUser = await User.isThisIDInUse(idnumber);
-  if (!isNewUser)
-    return res.json({
-      success: false,
-      message: 'This ID number is already in use, try sign-in',
-    });
+
   const user = await User({
     fullname,
     email,
-    password,
-    idnumber
+    password
   });
   await user.save();
   
