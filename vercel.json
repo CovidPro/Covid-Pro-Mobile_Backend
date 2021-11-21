@@ -1,0 +1,18 @@
+{
+  "name": "Covid-Pro-Mobile",
+  "version": 2,
+  "builds": [{ "src": "app.js",   "use": "@vercel/node" }],
+  "routes": [
+    {
+      "src": ".*",
+      "dest": "/app.js",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "Access-Control-Allow-Credentials": "true"
+      },
+      "continue": true
+    }
+  ]
+}
+
