@@ -16,11 +16,12 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  /*
   idnumber: {
     type: String,
     required: true,
     unique: true,
-  },
+  },*/
   
   avatar: String,
   tokens: [{ type: Object }],
@@ -61,6 +62,7 @@ userSchema.statics.isThisEmailInUse = async function (email) {
   }
 };
 
+/*
 userSchema.statics.isThisIDInUse = async function (idnumber) {
   if (!idnumber) throw new Error('Invalid ID Number');
   try {
@@ -73,6 +75,8 @@ userSchema.statics.isThisIDInUse = async function (idnumber) {
     return false;
   }
 };
+*/
+
 
 const User = mongoose.model('user', userSchema);
 module.exports = User;
