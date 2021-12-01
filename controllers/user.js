@@ -3,6 +3,7 @@ const User = require('../models/user');
 const sharp = require('sharp');
 const cloudinary = require('../helper/imageUpload');
 const { string } = require('sharp/lib/is');
+const { stringify } = require('nodemon/lib/utils');
 
 exports.createUser = async (req, res) => {
   console.log(req.body);
@@ -44,19 +45,6 @@ exports.userSignIn = async (req, res) => {
       success: false,
       message: 'email / password does not match!',
     });
-
-  const userInfo = {
-    fullname: user.fullname,
-    email: user.email,
-    avatar: user.avatar ? user.avatar : '',
-  };
-  res.json({ success: true, user: userInfo });
-};
-
-exports.timeUpdate = async () => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  console.log(user.email);
   
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: '1d',
@@ -74,14 +62,36 @@ exports.timeUpdate = async () => {
   }
 
   await User.findByIdAndUpdate(user._id, {
-    tokens: [...oldTokens, { token, scanned: 'just now' }],
+    tokens: [...oldTokens, { token, signedAt: stringify(Date.now()) }],
+  });
+  const userInfo = {
+    fullname: user.fullname,
+    email: user.email,
+    avatar: user.avatar ? user.avatar : '',
+  };
+  res.json({ success: true, user: userInfo, token });
+};
+
+exports.timeUpdate = async (req,res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  console.log(user.email);
+
+  await User.findByIdAndUpdate(user._id, {
+    updatedQRAt: Date.now()
   });
   console.log('time update');
 };
 
 exports.positive = async(req, res) => {
   console.log(req.body);
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
   console.log('positive pressed');
+
+  await User.findByIdAndUpdate(user._id, {
+    updatedQRAt: Date.now()
+  });
 };
 
 exports.uploadProfile = async (req, res) => {

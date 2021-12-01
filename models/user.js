@@ -30,6 +30,8 @@ const userSchema = new Schema({
   },
   avatar: String,
   tokens: [{ type: Object }],
+
+  updatedQRAt: {type : Date}
 });
 
 userSchema.pre('save', function (next) {
@@ -80,5 +82,5 @@ userSchema.statics.isThisEmailInUse = async function (email) {
   }
 };
 
-const User = mongoose.model('usertemp', userSchema);
+const User = mongoose.model('user', userSchema);
 module.exports = User;
