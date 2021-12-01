@@ -3,7 +3,19 @@ const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 const userSchema = new Schema({
+  nic: {
+    type: String,
+    required: true,
+  },
   fullname: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  contactNo: {
     type: String,
     required: true,
   },
@@ -15,13 +27,7 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-  },
-  idnumber: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  
+  }, 
   avatar: String,
   tokens: [{ type: Object }],
 });
@@ -48,6 +54,19 @@ userSchema.methods.comparePassword = async function (password) {
   }
 };
 
+userSchema.statics.isThisNicInUse = async function (nic) {
+  if (!nic) throw new Error('Duplicated NIC!');
+  try {
+    const user = await this.findOne({ nic });
+    if (user) return false;
+    return true;
+  }
+  catch (error) {
+    console.log('Error while checking nic duplication!', error.message);
+    return false;
+  }
+};
+
 userSchema.statics.isThisEmailInUse = async function (email) {
   if (!email) throw new Error('Invalid Email');
   try {
@@ -61,18 +80,5 @@ userSchema.statics.isThisEmailInUse = async function (email) {
   }
 };
 
-userSchema.statics.isThisIDInUse = async function (idnumber) {
-  if (!idnumber) throw new Error('Invalid ID Number');
-  try {
-    const user = await this.findOne({ idnumber });
-    if (user) return false;
-
-    return true;
-  } catch (error) {
-    console.log('error inside isThisIDInUse method', error.message);
-    return false;
-  }
-};
-
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('usertemp', userSchema);
 module.exports = User;
