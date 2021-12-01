@@ -22,7 +22,7 @@ const userSchema = new Schema({
     required: true,
     unique: true,
   },*/
-  
+
   avatar: String,
   tokens: [{ type: Object }],
 });
@@ -50,7 +50,7 @@ userSchema.methods.comparePassword = async function (password) {
 };
 
 userSchema.statics.isThisEmailInUse = async function (email) {
-  if (!email) throw new Error('Invalid Email');
+  if (!idnumber) throw new Error('Invalid ID Number');
   try {
     const user = await this.findOne({ email });
     if (user) return false;
