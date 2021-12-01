@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const sharp = require('sharp');
 const cloudinary = require('../helper/imageUpload');
+const { string } = require('sharp/lib/is');
 
 exports.createUser = async (req, res) => {
   console.log(req.body);
@@ -28,7 +29,7 @@ exports.createUser = async (req, res) => {
 exports.userSignIn = async (req, res) => {
   
   const { email, password } = req.body;
-
+  console.log(email);
   const user = await User.findOne({ email });
 
   if (!user)
@@ -44,6 +45,19 @@ exports.userSignIn = async (req, res) => {
       message: 'email / password does not match!',
     });
 
+  const userInfo = {
+    fullname: user.fullname,
+    email: user.email,
+    avatar: user.avatar ? user.avatar : '',
+  };
+  res.json({ success: true, user: userInfo, token });
+};
+
+exports.timeUpdate = async () => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  console.log(user.email);
+  
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: '1d',
   });
@@ -60,27 +74,13 @@ exports.userSignIn = async (req, res) => {
   }
 
   await User.findByIdAndUpdate(user._id, {
-    tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
-  });
-
-  const userInfo = {
-    fullname: user.fullname,
-    email: user.email,
-    avatar: user.avatar ? user.avatar : '',
-  };
-  res.json({ success: true, user: userInfo, token });
-};
-
-exports.timeUpdate = async () => {
-  const id = User.getIds();
-  User.findByIdAndUpdate(id, {
-    time: Date.now().toString(),
-    // tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
+    tokens: [...oldTokens, { token, scanned: 'just now' }],
   });
   console.log('time update');
 };
 
-exports.positive = async () => {
+exports.positive = async(req, res) => {
+  console.log(req.body);
   console.log('positive pressed');
 };
 
