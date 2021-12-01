@@ -68,8 +68,12 @@ exports.userSignIn = async (req, res) => {
     email: user.email,
     avatar: user.avatar ? user.avatar : '',
   };
-
   res.json({ success: true, user: userInfo, token });
+};
+
+exports.positive = async () => {
+  console.log('positive pressed');
+  res.json({ success: true, message: 'positive pressed' });
 };
 
 exports.uploadProfile = async (req, res) => {
@@ -122,20 +126,4 @@ exports.signOut = async (req, res) => {
     await User.findByIdAndUpdate(req.user._id, { tokens: newTokens });
     res.json({ success: true, message: 'Sign out successfully!' });
   }
-};
-
-exports.updateTime = async (req, res) => {
-  const { user } = req;
-  if (!user)
-    return res
-        .status(401)
-        .json({ success: false, message: 'unauthorized access!' });
-
-  const { time } = req.body;
-  const updatedUser = await User.findByIdAndUpdate(
-      user._id,
-      { time : "7878"},
-      { new: true }
-  );
-  res.json({ success: true, message: 'Your time has updated!' });
 };
