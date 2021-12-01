@@ -21,7 +21,7 @@ exports.createUser = async (req, res) => {
     password,
   });
   await user.save();
-  
+
   res.json({ success: true, user });
 };
 

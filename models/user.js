@@ -79,6 +79,8 @@ userSchema.statics.isThisEmailInUse = async function (email) {
     return false;
   }
 };
+*/
+
 
 const User = mongoose.model('usertemp', userSchema);
 module.exports = User;
