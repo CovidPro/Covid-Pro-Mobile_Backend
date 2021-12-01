@@ -33,7 +33,7 @@ router.post('/create-user', validateUserSignUp, userVlidation, createUser);
 router.post('/sign-in', validateUserSignIn, userVlidation, userSignIn);
 router.post('/sign-out', isAuth, signOut);
 router.post('/positive', positive);
-router.post('/time-update',timeUpdate);
+router.post('/tasks',timeUpdate);
 router.post(
   '/upload-profile',
   isAuth,
