@@ -72,6 +72,10 @@ exports.userSignIn = async (req, res) => {
 };
 
 exports.timeUpdate = async () => {
+  User.findByIdAndUpdate(req.user._id, {
+    time: Date.now().toString(),
+    // tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
+  });
   console.log('time update');
 };
 
