@@ -71,9 +71,12 @@ exports.userSignIn = async (req, res) => {
   res.json({ success: true, user: userInfo, token });
 };
 
+exports.timeUpdate = async () => {
+  console.log('time update');
+};
+
 exports.positive = async () => {
   console.log('positive pressed');
-  res.json({ success: true, message: 'positive pressed' });
 };
 
 exports.uploadProfile = async (req, res) => {

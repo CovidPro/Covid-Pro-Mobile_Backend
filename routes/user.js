@@ -5,6 +5,7 @@ const {
   createUser,
   userSignIn,
   positive,
+  timeUpdate,
   uploadProfile,
   signOut,
 } = require('../controllers/user');
@@ -31,7 +32,8 @@ const uploads = multer({ storage, fileFilter });
 router.post('/create-user', validateUserSignUp, userVlidation, createUser);
 router.post('/sign-in', validateUserSignIn, userVlidation, userSignIn);
 router.post('/sign-out', isAuth, signOut);
-router.post('/positive');
+router.post('/positive', positive);
+router.post('/time-update',timeUpdate);
 router.post(
   '/upload-profile',
   isAuth,
