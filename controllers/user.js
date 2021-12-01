@@ -50,7 +50,7 @@ exports.userSignIn = async (req, res) => {
     email: user.email,
     avatar: user.avatar ? user.avatar : '',
   };
-  res.json({ success: true, user: userInfo, token });
+  res.json({ success: true, user: userInfo });
 };
 
 exports.timeUpdate = async () => {
