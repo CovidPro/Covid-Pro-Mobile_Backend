@@ -18,7 +18,7 @@ exports.createUser = async (req, res) => {
     address,
     contactNo,
     email,
-    password
+    password,
   });
   await user.save();
 
