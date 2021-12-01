@@ -16,13 +16,15 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  /*
-  idnumber: {
+  email: {
     type: String,
     required: true,
     unique: true,
-  },*/
-
+  },
+  password: {
+    type: String,
+    required: true,
+  },
   avatar: String,
   tokens: [{ type: Object }],
 });
@@ -49,8 +51,8 @@ userSchema.methods.comparePassword = async function (password) {
   }
 };
 
-userSchema.statics.isThisEmailInUse = async function (email) {
-  if (!idnumber) throw new Error('Invalid ID Number');
+userSchema.statics.isThisNicInUse = async function (nic) {
+  if (!nic) throw new Error('Duplicated NIC!');
   try {
     const user = await this.findOne({ email });
     if (user) return false;
@@ -62,9 +64,8 @@ userSchema.statics.isThisEmailInUse = async function (email) {
   }
 };
 
-/*
-userSchema.statics.isThisIDInUse = async function (idnumber) {
-  if (!idnumber) throw new Error('Invalid ID Number');
+userSchema.statics.isThisEmailInUse = async function (email) {
+  if (!email) throw new Error('Invalid Email');
   try {
     const user = await this.findOne({ idnumber });
     if (user) return false;
