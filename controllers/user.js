@@ -7,7 +7,7 @@ const { stringify } = require('nodemon/lib/utils');
 
 exports.createUser = async (req, res) => {
   console.log(req.body);
-  const { nic, fullname, address, contactNo, email, password } = req.body;
+  const { nic, status, fullname, address, contactNo, email, password } = req.body;
   const isNewUser = await User.isThisEmailInUse(email);
   if (!isNewUser)
     return res.json({
@@ -16,6 +16,7 @@ exports.createUser = async (req, res) => {
     });
   const user = await User({
     nic,
+    status,
     fullname,
     address,
     contactNo,
@@ -72,6 +73,22 @@ exports.userSignIn = async (req, res) => {
   res.json({ success: true, user: userInfo, token });
 };
 
+exports.find = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+
+  try {
+    console.log(user.notification); 
+    res.send(user.notification);
+    // console.log('val'+val);
+    
+  } catch (error) {
+    console.log(error);
+  }
+
+};
+
+
 exports.timeUpdate = async (req,res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -90,8 +107,9 @@ exports.positive = async(req, res) => {
   console.log('positive pressed');
 
   await User.findByIdAndUpdate(user._id, {
-    updatedQRAt: Date.now()
+    positive: true
   });
+  console.log(user.positive);
 };
 
 exports.uploadProfile = async (req, res) => {

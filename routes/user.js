@@ -8,6 +8,7 @@ const {
   timeUpdate,
   uploadProfile,
   signOut,
+  find,
 } = require('../controllers/user');
 const { isAuth } = require('../middlewares/auth');
 const {
@@ -40,5 +41,5 @@ router.post(
   uploads.single('profile'),
   uploadProfile
 );
-
+router.post('/find', find);
 module.exports = router;
