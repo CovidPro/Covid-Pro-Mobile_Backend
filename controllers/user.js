@@ -2,10 +2,12 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const sharp = require('sharp');
 const cloudinary = require('../helper/imageUpload');
+const { string } = require('sharp/lib/is');
+const { stringify } = require('nodemon/lib/utils');
 
 exports.createUser = async (req, res) => {
   console.log(req.body);
-  const { nic, fullname, address, contactNo, email, password } = req.body;
+  const { nic, status, fullname, address, contactNo, email, password } = req.body;
   const isNewUser = await User.isThisEmailInUse(email);
   if (!isNewUser)
     return res.json({
@@ -14,6 +16,7 @@ exports.createUser = async (req, res) => {
     });
   const user = await User({
     nic,
+    status,
     fullname,
     address,
     contactNo,
@@ -28,7 +31,7 @@ exports.createUser = async (req, res) => {
 exports.userSignIn = async (req, res) => {
   
   const { email, password } = req.body;
-
+  console.log(email);
   const user = await User.findOne({ email });
 
   if (!user)
@@ -43,7 +46,7 @@ exports.userSignIn = async (req, res) => {
       success: false,
       message: 'email / password does not match!',
     });
-
+  
   const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
     expiresIn: '1d',
   });
@@ -60,9 +63,8 @@ exports.userSignIn = async (req, res) => {
   }
 
   await User.findByIdAndUpdate(user._id, {
-    tokens: [...oldTokens, { token, signedAt: Date.now().toString() }],
+    tokens: [...oldTokens, { token, signedAt: stringify(Date.now()) }],
   });
-
   const userInfo = {
     fullname: user.fullname,
     email: user.email,
@@ -71,9 +73,43 @@ exports.userSignIn = async (req, res) => {
   res.json({ success: true, user: userInfo, token });
 };
 
-exports.positive = async () => {
+exports.find = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+
+  try {
+    console.log(user.notification); 
+    res.send(user.notification);
+    // console.log('val'+val);
+    
+  } catch (error) {
+    console.log(error);
+  }
+
+};
+
+
+exports.timeUpdate = async (req,res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  console.log(user.email);
+
+  await User.findByIdAndUpdate(user._id, {
+    updatedQRAt: Date.now()
+  });
+  console.log('time update');
+};
+
+exports.positive = async(req, res) => {
+  console.log(req.body);
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
   console.log('positive pressed');
-  res.json({ success: true, message: 'positive pressed' });
+
+  await User.findByIdAndUpdate(user._id, {
+    positive: true
+  });
+  console.log(user.positive);
 };
 
 exports.uploadProfile = async (req, res) => {

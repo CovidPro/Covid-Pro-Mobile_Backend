@@ -7,6 +7,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  status: {
+    type: String,
+    required: true,
+  },
   fullname: {
     type: String,
     required: true,
@@ -28,8 +32,17 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+
+  positive: { type: Boolean },
+  
+  notification: {
+    type: String,
+  },
+
   avatar: String,
   tokens: [{ type: Object }],
+
+  updatedQRAt: {type : Date}
 });
 
 userSchema.pre('save', function (next) {
@@ -79,8 +92,6 @@ userSchema.statics.isThisEmailInUse = async function (email) {
     return false;
   }
 };
-*/
 
-
-const User = mongoose.model('usertemp', userSchema);
+const User = mongoose.model('user', userSchema);
 module.exports = User;

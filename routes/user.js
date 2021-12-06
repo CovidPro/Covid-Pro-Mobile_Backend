@@ -5,8 +5,10 @@ const {
   createUser,
   userSignIn,
   positive,
+  timeUpdate,
   uploadProfile,
   signOut,
+  find,
 } = require('../controllers/user');
 const { isAuth } = require('../middlewares/auth');
 const {
@@ -31,12 +33,13 @@ const uploads = multer({ storage, fileFilter });
 router.post('/create-user', validateUserSignUp, userVlidation, createUser);
 router.post('/sign-in', validateUserSignIn, userVlidation, userSignIn);
 router.post('/sign-out', isAuth, signOut);
-router.post('/positive');
+router.post('/positive', positive);
+router.post('/tasks',timeUpdate);
 router.post(
   '/upload-profile',
   isAuth,
   uploads.single('profile'),
   uploadProfile
 );
-
+router.post('/find', find);
 module.exports = router;
